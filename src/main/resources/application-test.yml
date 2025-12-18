@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    
+logging:
+  level:
+    com.xbk: INFO

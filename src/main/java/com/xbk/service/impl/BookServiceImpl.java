@@ -1,35 +1,41 @@
 package com.xbk.service.impl;
 
-import com.xbk.dao.BookDAO;
-import com.xbk.dao.BorrowRecordDAO;
-import com.xbk.dao.impl.BookDAOImpl;
-import com.xbk.dao.impl.BorrowRecordDAOImpl;
 import com.xbk.entity.Book;
 import com.xbk.entity.BorrowRecord;
+import com.xbk.mapper.BookMapper;
+import com.xbk.mapper.BorrowRecordMapper;
 import com.xbk.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * 图书服务实现类
  */
+@Service
+@Transactional
 public class BookServiceImpl implements BookService {
 
-    private BookDAO bookDAO = new BookDAOImpl();
-    private BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAOImpl();
+    @Autowired
+    private BookMapper bookMapper;
+
+    @Autowired
+    private BorrowRecordMapper borrowRecordMapper;
 
     @Override
     public boolean addBook(Book book) {
         // 验证ISBN唯一性
-        Book existing = bookDAO.findByIsbn(book.getIsbn());
+        Book existing = bookMapper.findByIsbn(book.getIsbn());
         if (existing != null) {
             System.err.println("ISBN已存在: " + book.getIsbn());
             return false;
         }
 
-        int id = bookDAO.insert(book);
-        if (id > 0) {
-            System.out.println("图书添加成功，ID: " + id);
+        int result = bookMapper.insert(book);
+        if (result > 0) {
+            System.out.println("图书添加成功，ID: " + book.getId());
             return true;
         }
         return false;
@@ -38,7 +44,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean updateBook(Book book) {
         // 验证图书是否存在
-        Book existing = bookDAO.findById(book.getId());
+        Book existing = bookMapper.selectById(book.getId());
         if (existing == null) {
             System.err.println("图书不存在，ID: " + book.getId());
             return false;
@@ -46,14 +52,14 @@ public class BookServiceImpl implements BookService {
 
         // 如果修改了ISBN，需要验证新ISBN的唯一性
         if (!existing.getIsbn().equals(book.getIsbn())) {
-            Book duplicateIsbn = bookDAO.findByIsbn(book.getIsbn());
+            Book duplicateIsbn = bookMapper.findByIsbn(book.getIsbn());
             if (duplicateIsbn != null) {
                 System.err.println("ISBN已被其他图书使用: " + book.getIsbn());
                 return false;
             }
         }
 
-        int affected = bookDAO.update(book);
+        int affected = bookMapper.updateById(book);
         if (affected > 0) {
             System.out.println("图书更新成功");
             return true;
@@ -64,7 +70,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(int id) {
         // 检查是否有未归还的借阅记录
-        List<BorrowRecord> activeRecords = borrowRecordDAO.findByBookId(id);
+        List<BorrowRecord> activeRecords = borrowRecordMapper.findByBookId(id);
         for (BorrowRecord record : activeRecords) {
             if (BorrowRecord.STATUS_BORROWED.equals(record.getStatus())) {
                 System.err.println("该图书还有未归还的借阅记录，无法删除");
@@ -72,7 +78,7 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        int affected = bookDAO.delete(id);
+        int affected = bookMapper.deleteById(id);
         if (affected > 0) {
             System.out.println("图书删除成功");
             return true;
@@ -82,26 +88,26 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(int id) {
-        return bookDAO.findById(id);
+        return bookMapper.selectById(id);
     }
 
     @Override
     public Book getBookByIsbn(String isbn) {
-        return bookDAO.findByIsbn(isbn);
+        return bookMapper.findByIsbn(isbn);
     }
 
     @Override
     public List<Book> getAllBooks() {
-        return bookDAO.findAll();
+        return bookMapper.selectList(null);
     }
 
     @Override
     public List<Book> searchBooks(String keyword) {
-        return bookDAO.findByKeyword(keyword);
+        return bookMapper.findByKeyword(keyword);
     }
 
     @Override
     public List<Book> getBooksByCategory(int categoryId) {
-        return bookDAO.findByCategory(categoryId);
+        return bookMapper.findByCategory(categoryId);
     }
 }

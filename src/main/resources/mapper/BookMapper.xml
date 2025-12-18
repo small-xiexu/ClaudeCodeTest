@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbk.mapper.BookMapper">
+
+    <!-- 根据 ISBN 查找图书 -->
+    <select id="findByIsbn" resultType="com.xbk.entity.Book">
+        SELECT * FROM book WHERE isbn = #{isbn}
+    </select>
+
+    <!-- 根据分类 ID 查找图书 -->
+    <select id="findByCategory" resultType="com.xbk.entity.Book">
+        SELECT * FROM book WHERE category_id = #{categoryId}
+    </select>
+
+    <!-- 根据关键词搜索图书（书名或作者） -->
+    <select id="findByKeyword" resultType="com.xbk.entity.Book">
+        SELECT * FROM book
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+           OR author LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 更新图书可用数量 -->
+    <update id="updateAvailableQuantity">
+        UPDATE book SET available_quantity = available_quantity + #{quantity}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

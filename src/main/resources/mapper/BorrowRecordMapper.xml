@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbk.mapper.BorrowRecordMapper">
+
+    <!-- 根据读者 ID 查找所有借阅记录 -->
+    <select id="findByReaderId" resultType="com.xbk.entity.BorrowRecord">
+        SELECT * FROM borrow_record
+        WHERE reader_id = #{readerId}
+        ORDER BY borrow_date DESC
+    </select>
+
+    <!-- 根据图书 ID 查找所有借阅记录 -->
+    <select id="findByBookId" resultType="com.xbk.entity.BorrowRecord">
+        SELECT * FROM borrow_record
+        WHERE book_id = #{bookId}
+        ORDER BY borrow_date DESC
+    </select>
+
+    <!-- 查找读者当前未归还的借阅记录 -->
+    <select id="findActiveByReaderId" resultType="com.xbk.entity.BorrowRecord">
+        SELECT * FROM borrow_record
+        WHERE reader_id = #{readerId}
+          AND status = 'BORROWED'
+        ORDER BY borrow_date DESC
+    </select>
+
+    <!-- 查找所有逾期未归还的借阅记录 -->
+    <select id="findOverdueRecords" resultType="com.xbk.entity.BorrowRecord">
+        SELECT * FROM borrow_record
+        WHERE status = 'BORROWED'
+          AND due_date &lt; CURDATE()
+        ORDER BY due_date ASC
+    </select>
+
+</mapper>

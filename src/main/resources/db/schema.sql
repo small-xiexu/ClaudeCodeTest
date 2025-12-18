@@ -1,4 +1,4 @@
--- 图书管理系统数据库初始化脚本
+-- 图书管理系统数据库初始化脚本 (MySQL)
 
 -- 分类表
 CREATE TABLE IF NOT EXISTS category (
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS category (
     name VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 图书表
 CREATE TABLE IF NOT EXISTS book (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS book (
     FOREIGN KEY (category_id) REFERENCES category(id),
     CHECK (available_quantity >= 0),
     CHECK (available_quantity <= total_quantity)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 读者表
 CREATE TABLE IF NOT EXISTS reader (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS reader (
     max_borrow_count INT DEFAULT 5,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 借阅记录表
 CREATE TABLE IF NOT EXISTS borrow_record (
@@ -54,28 +54,20 @@ CREATE TABLE IF NOT EXISTS borrow_record (
     remarks VARCHAR(200),
     FOREIGN KEY (book_id) REFERENCES book(id),
     FOREIGN KEY (reader_id) REFERENCES reader(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 创建索引提升查询性能
-CREATE INDEX IF NOT EXISTS idx_book_category ON book(category_id);
-CREATE INDEX IF NOT EXISTS idx_book_isbn ON book(isbn);
-CREATE INDEX IF NOT EXISTS idx_reader_card ON reader(card_number);
-CREATE INDEX IF NOT EXISTS idx_borrow_book ON borrow_record(book_id);
-CREATE INDEX IF NOT EXISTS idx_borrow_reader ON borrow_record(reader_id);
-CREATE INDEX IF NOT EXISTS idx_borrow_status ON borrow_record(status);
+CREATE INDEX idx_book_category ON book(category_id);
+CREATE INDEX idx_book_isbn ON book(isbn);
+CREATE INDEX idx_reader_card ON reader(card_number);
+CREATE INDEX idx_borrow_book ON borrow_record(book_id);
+CREATE INDEX idx_borrow_reader ON borrow_record(reader_id);
+CREATE INDEX idx_borrow_status ON borrow_record(status);
 
--- 插入初始分类数据（使用MERGE避免重复插入）
-MERGE INTO category (name, description) KEY(name) VALUES
-('文学', '小说、诗歌、散文等文学作品');
-
-MERGE INTO category (name, description) KEY(name) VALUES
-('科技', '计算机、工程、科学等技术类书籍');
-
-MERGE INTO category (name, description) KEY(name) VALUES
-('历史', '历史、传记、考古等历史类书籍');
-
-MERGE INTO category (name, description) KEY(name) VALUES
-('艺术', '绘画、音乐、摄影等艺术类书籍');
-
-MERGE INTO category (name, description) KEY(name) VALUES
+-- 插入初始分类数据
+INSERT IGNORE INTO category (name, description) VALUES
+('文学', '小说、诗歌、散文等文学作品'),
+('科技', '计算机、工程、科学等技术类书籍'),
+('历史', '历史、传记、考古等历史类书籍'),
+('艺术', '绘画、音乐、摄影等艺术类书籍'),
 ('教育', '教材、教辅、教育理论等书籍');

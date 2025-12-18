@@ -1,14 +1,26 @@
 package com.xbk.entity;
 
+import com.baomidou.mybatisplus.annotation.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * 分类实体类
  */
-public class Category {
+@TableName("category")
+public class Category implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+    @TableField("name")
     private String name;
+
+    @TableField("description")
     private String description;
+
+    @TableField(value = "created_at", fill = FieldFill.INSERT)
     private Timestamp createdAt;
 
     public Category() {

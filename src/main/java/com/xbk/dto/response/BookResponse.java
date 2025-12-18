@@ -1,74 +1,74 @@
-package com.xbk.entity;
+package com.xbk.dto.response;
 
-import com.baomidou.mybatisplus.annotation.*;
-import java.io.Serializable;
+import com.xbk.entity.Book;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * 图书实体类
+ * 图书响应
  */
-@TableName("book")
-public class Book implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Schema(description = "图书响应")
+public class BookResponse {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(description = "图书ID", example = "1")
     private Integer id;
 
-    @TableField("isbn")
+    @Schema(description = "ISBN编号", example = "978-7-111-12345-6")
     private String isbn;
 
-    @TableField("title")
+    @Schema(description = "书名", example = "Java编程思想")
     private String title;
 
-    @TableField("author")
+    @Schema(description = "作者", example = "Bruce Eckel")
     private String author;
 
-    @TableField("publisher")
+    @Schema(description = "出版社", example = "机械工业出版社")
     private String publisher;
 
-    @TableField("publish_date")
+    @Schema(description = "出版日期", example = "2007-06-01")
     private Date publishDate;
 
-    @TableField("category_id")
+    @Schema(description = "分类ID", example = "1")
     private Integer categoryId;
 
-    @TableField("total_quantity")
+    @Schema(description = "总藏书量", example = "10")
     private Integer totalQuantity;
 
-    @TableField("available_quantity")
+    @Schema(description = "可借数量", example = "8")
     private Integer availableQuantity;
 
-    @TableField("location")
+    @Schema(description = "位置", example = "A区-1层-001")
     private String location;
 
-    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    @Schema(description = "创建时间", example = "2024-01-01 12:00:00")
     private Timestamp createdAt;
 
-    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
+    @Schema(description = "更新时间", example = "2024-01-01 12:00:00")
     private Timestamp updatedAt;
 
-    public Book() {
+    public BookResponse() {
     }
 
-    public Book(String isbn, String title, String author) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.totalQuantity = 1;
-        this.availableQuantity = 1;
-    }
-
-    public Book(String isbn, String title, String author, String publisher, Date publishDate, Integer categoryId, Integer totalQuantity, String location) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.categoryId = categoryId;
-        this.totalQuantity = totalQuantity;
-        this.availableQuantity = totalQuantity;
-        this.location = location;
+    public static BookResponse fromEntity(Book book) {
+        if (book == null) {
+            return null;
+        }
+        BookResponse response = new BookResponse();
+        response.setId(book.getId());
+        response.setIsbn(book.getIsbn());
+        response.setTitle(book.getTitle());
+        response.setAuthor(book.getAuthor());
+        response.setPublisher(book.getPublisher());
+        response.setPublishDate(book.getPublishDate());
+        response.setCategoryId(book.getCategoryId());
+        response.setTotalQuantity(book.getTotalQuantity());
+        response.setAvailableQuantity(book.getAvailableQuantity());
+        response.setLocation(book.getLocation());
+        response.setCreatedAt(book.getCreatedAt());
+        response.setUpdatedAt(book.getUpdatedAt());
+        return response;
     }
 
     public Integer getId() {
@@ -165,23 +165,5 @@ public class Book implements Serializable {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", publishDate=" + publishDate +
-                ", categoryId=" + categoryId +
-                ", totalQuantity=" + totalQuantity +
-                ", availableQuantity=" + availableQuantity +
-                ", location='" + location + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 }

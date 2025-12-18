@@ -1,5 +1,7 @@
 package com.xbk.entity;
 
+import com.baomidou.mybatisplus.annotation.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -7,15 +9,35 @@ import java.sql.Timestamp;
 /**
  * 借阅记录实体类
  */
-public class BorrowRecord {
+@TableName("borrow_record")
+public class BorrowRecord implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+    @TableField("book_id")
     private Integer bookId;
+
+    @TableField("reader_id")
     private Integer readerId;
+
+    @TableField("borrow_date")
     private Timestamp borrowDate;
+
+    @TableField("due_date")
     private Date dueDate;
+
+    @TableField("return_date")
     private Timestamp returnDate;
+
+    @TableField("status")
     private String status;
+
+    @TableField("fine")
     private BigDecimal fine;
+
+    @TableField("remarks")
     private String remarks;
 
     public static final String STATUS_BORROWED = "BORROWED";

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lsof:*)",
+      "Bash(curl:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker ps:*)",
+      "Bash(kill:*)",
+      "Bash(mvn spring-boot:run:*)"
+    ]
+  }
+}

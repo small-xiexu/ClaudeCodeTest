@@ -1,63 +1,65 @@
-package com.xbk.entity;
+package com.xbk.dto.response;
 
-import com.baomidou.mybatisplus.annotation.*;
-import java.io.Serializable;
+import com.xbk.entity.Reader;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.sql.Timestamp;
 
 /**
- * 读者实体类
+ * 读者响应
  */
-@TableName("reader")
-public class Reader implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Schema(description = "读者响应")
+public class ReaderResponse {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(description = "读者ID", example = "1")
     private Integer id;
 
-    @TableField("card_number")
+    @Schema(description = "借书证号", example = "R20240001")
     private String cardNumber;
 
-    @TableField("name")
+    @Schema(description = "姓名", example = "张三")
     private String name;
 
-    @TableField("gender")
+    @Schema(description = "性别", example = "男")
     private String gender;
 
-    @TableField("phone")
+    @Schema(description = "手机号", example = "13812345678")
     private String phone;
 
-    @TableField("email")
+    @Schema(description = "邮箱", example = "zhangsan@example.com")
     private String email;
 
-    @TableField("address")
+    @Schema(description = "地址", example = "北京市朝阳区XXX街道XXX号")
     private String address;
 
-    @TableField("max_borrow_count")
+    @Schema(description = "最大借阅数量", example = "5")
     private Integer maxBorrowCount;
 
-    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    @Schema(description = "创建时间", example = "2024-01-01 12:00:00")
     private Timestamp createdAt;
 
-    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
+    @Schema(description = "更新时间", example = "2024-01-01 12:00:00")
     private Timestamp updatedAt;
 
-    public Reader() {
+    public ReaderResponse() {
     }
 
-    public Reader(String cardNumber, String name) {
-        this.cardNumber = cardNumber;
-        this.name = name;
-        this.maxBorrowCount = 5;
-    }
-
-    public Reader(String cardNumber, String name, String gender, String phone, String email, String address) {
-        this.cardNumber = cardNumber;
-        this.name = name;
-        this.gender = gender;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.maxBorrowCount = 5;
+    public static ReaderResponse fromEntity(Reader reader) {
+        if (reader == null) {
+            return null;
+        }
+        ReaderResponse response = new ReaderResponse();
+        response.setId(reader.getId());
+        response.setCardNumber(reader.getCardNumber());
+        response.setName(reader.getName());
+        response.setGender(reader.getGender());
+        response.setPhone(reader.getPhone());
+        response.setEmail(reader.getEmail());
+        response.setAddress(reader.getAddress());
+        response.setMaxBorrowCount(reader.getMaxBorrowCount());
+        response.setCreatedAt(reader.getCreatedAt());
+        response.setUpdatedAt(reader.getUpdatedAt());
+        return response;
     }
 
     public Integer getId() {
@@ -138,21 +140,5 @@ public class Reader implements Serializable {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Reader{" +
-                "id=" + id +
-                ", cardNumber='" + cardNumber + '\'' +
-                ", name='" + name + '\'' +
-                ", gender='" + gender + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", maxBorrowCount=" + maxBorrowCount +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 }
