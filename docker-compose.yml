@@ -1,0 +1,22 @@
+services:
+  # Spring Boot 后端应用
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: library-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # 连接到已有的 MySQL 容器
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/library_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_PROFILES_ACTIVE: dev
+    networks:
+      - binghe-network
+
+networks:
+  binghe-network:
+    external: true
