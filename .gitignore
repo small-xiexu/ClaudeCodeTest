@@ -44,5 +44,8 @@ Thumbs.db
 *.tar.gz
 *.rar
 
+# Compiled class files
+*.class
+
 # JVM crash logs
 hs_err_pid*
